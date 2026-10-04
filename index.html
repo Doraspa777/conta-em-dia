@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1769e0"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-180.png">
+<title>Conta em Dia</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f6f9;color:#17212b;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.app{max-width:560px;margin:auto;min-height:100vh;padding:18px;padding-bottom:32px}h1{margin:0;font-size:28px}.sub{margin:5px 0 16px;color:#697586}
+.tabs{display:flex;gap:6px;background:#e6ebf1;padding:5px;border-radius:15px;margin-bottom:14px}.tab{flex:1;border:0;border-radius:11px;background:transparent;color:#526071;font-weight:700;padding:12px 5px;font-size:13px}.tab.active{background:#fff;color:#1769e0;box-shadow:0 2px 8px #0002}
+.hidden{display:none!important}.card,.hero{background:#fff;border-radius:18px;padding:18px;margin:12px 0;box-shadow:0 5px 20px #0000000c}.hero{background:#1769e0;color:#fff}.hero h2{margin:7px 0;font-size:25px}.hero p{line-height:1.45;opacity:.9}
+label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}input{width:100%;padding:13px;border:1px solid #d6dce3;border-radius:11px;font-size:16px}.hero input{border:0}
+button.primary{width:100%;border:0;border-radius:11px;padding:13px;margin-top:12px;background:#1769e0;color:#fff;font-size:16px;font-weight:700}.hero button.primary{background:#fff;color:#1769e0}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:#f6f8fa;border-radius:13px;padding:13px}.stat b{display:block;font-size:19px;margin-top:4px}.green{color:#16834b}.red{color:#c53030}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bill{display:flex;justify-content:space-between;gap:12px;align-items:center;border-top:1px solid #edf0f3;padding:13px 0}.bill:first-child{border-top:0}.bill small{display:block;color:#788596;margin-top:3px}.delete{border:0;background:#edf2f7;color:#334155;padding:7px 9px;border-radius:9px}.empty{text-align:center;color:#7a8795;padding:12px}.notice{font-weight:700;margin-top:12px}
+.install{background:#e8f1ff;color:#1554a6;padding:12px 14px;border-radius:13px;font-size:13px;margin:12px 0}.install b{display:block;margin-bottom:3px}
+</style></head><body><div class="app">
+<h1>💰 Conta em Dia</h1><div class="sub">Organize suas contas e descubra quanto guardar.</div>
+<div id="installHelp" class="install hidden"><b>📲 Instalar no iPhone</b>Toque em Compartilhar no Safari → <b>Adicionar à Tela de Início</b>.</div>
+<div class="tabs"><button class="tab active" onclick="aba('guardar',this)">💰 Guardar</button><button class="tab" onclick="aba('contas',this)">🧾 Contas</button><button class="tab" onclick="aba('resumo',this)">📊 Resumo</button></div>
+
+<section id="guardar"><div class="hero"><div>🎯 Sua prioridade</div><h2>Quanto você quer guardar?</h2><p>Informe sua renda e sua meta. O app calcula quanto separar por mês, semana e dia.</p>
+<label>Renda mensal</label><input id="renda" type="number" min="0" step="0.01" placeholder="Ex.: 2000">
+<label>Quanto quer guardar por mês?</label><input id="meta" type="number" min="0" step="0.01" placeholder="Ex.: 300">
+<button class="primary" onclick="salvar()">Salvar minha meta</button><div id="aviso" class="notice"></div></div>
+<div class="card"><h3>💵 Seu plano</h3><div class="stats"><div class="stat">Por mês<b id="mes">R$ 0,00</b></div><div class="stat">Por semana<b id="semana">R$ 0,00</b></div><div class="stat">Por dia<b id="dia">R$ 0,00</b></div><div class="stat">Livre após contas<b id="livre">R$ 0,00</b></div></div><p id="mensagem"></p></div></section>
+
+<section id="contas" class="hidden"><div class="card"><h3>➕ Adicionar conta</h3><label>Nome</label><input id="nome" placeholder="Ex.: Internet"><label>Valor</label><input id="valor" type="number" min="0" step="0.01" placeholder="Ex.: 100"><label>Vencimento</label><input id="venc" type="date"><button class="primary" onclick="addConta()">Adicionar conta</button></div><div class="card"><h3>📋 Minhas contas</h3><div id="lista" class="empty">Nenhuma conta cadastrada.</div></div></section>
+
+<section id="resumo" class="hidden"><div class="card"><h3>📊 Resumo financeiro</h3><div class="stats"><div class="stat">Renda<b id="sr">R$ 0,00</b></div><div class="stat">Contas<b id="sc">R$ 0,00</b></div><div class="stat">Meta<b id="sm">R$ 0,00</b></div><div class="stat">Disponível<b id="sd">R$ 0,00</b></div></div></div></section>
+</div>
+<script>
+let contas=JSON.parse(localStorage.getItem("contas")||"[]");
+const $=id=>document.getElementById(id);
+function R(n){return Number(n||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}
+function total(){return contas.reduce((a,b)=>a+b.valor,0)}
+function salvar(){
+ const renda=+$("renda").value||0, meta=+$("meta").value||0, livre=renda-total()-meta;
+ localStorage.setItem("renda",renda);localStorage.setItem("meta",meta);
+ $("mes").textContent=R(meta);$("semana").textContent=R(meta/4);$("dia").textContent=R(meta/30);$("livre").textContent=R(livre);
+ $("livre").className=livre>=0?"green":"red";
+ $("mensagem").innerHTML=livre>=0?"✅ Você consegue guardar <b>"+R(meta)+"</b> por mês.":"⚠️ Sua meta está acima do valor que sobra depois das contas.";
+ $("aviso").textContent=livre>=0?"Meta salva com sucesso! 🎯":"Diminua a meta ou reduza suas contas.";
+ resumo();
+}
+function addConta(){
+ const nome=$("nome").value.trim(), valor=+$("valor").value||0;
+ if(!nome||valor<=0){alert("Digite o nome e o valor.");return}
+ contas.push({nome,valor,venc:$("venc").value});localStorage.setItem("contas",JSON.stringify(contas));
+ $("nome").value="";$("valor").value="";$("venc").value="";render();salvar();
+}
+function del(i){contas.splice(i,1);localStorage.setItem("contas",JSON.stringify(contas));render();salvar()}
+function render(){if(!contas.length){$("lista").className="empty";$("lista").textContent="Nenhuma conta cadastrada.";return}
+ $("lista").className="";$("lista").innerHTML=contas.map((c,i)=>{let d=c.venc?c.venc.split("-").reverse().join("/"):"Sem vencimento";return `<div class="bill"><div><b>${c.nome}</b><small>Vence: ${d}</small></div><div><b>${R(c.valor)}</b> <button class="delete" onclick="del(${i})">Excluir</button></div></div>`}).join("")}
+function resumo(){const renda=+$("renda").value||0,meta=+$("meta").value||0,t=total();$("sr").textContent=R(renda);$("sc").textContent=R(t);$("sm").textContent=R(meta);$("sd").textContent=R(renda-t-meta)}
+function aba(id,b){["guardar","contas","resumo"].forEach(x=>$(x).classList.add("hidden"));$(id).classList.remove("hidden");document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");if(id==="contas")render();if(id==="resumo")resumo()}
+$("renda").value=localStorage.getItem("renda")||"";$("meta").value=localStorage.getItem("meta")||"";render();if($("renda").value)salvar();
+if(!("standalone" in navigator)||!navigator.standalone) $("installHelp").classList.remove("hidden");
+if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+</script></body></html>
