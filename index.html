@@ -1,60 +1,128 @@
 <!doctype html>
-<html lang="pt-BR"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#1769e0"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default">
-<link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-180.png">
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#1769e0">
+<link rel="manifest" href="manifest.json">
 <title>Conta em Dia</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f3f6f9;color:#17212b;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-.app{max-width:560px;margin:auto;min-height:100vh;padding:18px;padding-bottom:32px}h1{margin:0;font-size:28px}.sub{margin:5px 0 16px;color:#697586}
-.tabs{display:flex;gap:6px;background:#e6ebf1;padding:5px;border-radius:15px;margin-bottom:14px}.tab{flex:1;border:0;border-radius:11px;background:transparent;color:#526071;font-weight:700;padding:12px 5px;font-size:13px}.tab.active{background:#fff;color:#1769e0;box-shadow:0 2px 8px #0002}
-.hidden{display:none!important}.card,.hero{background:#fff;border-radius:18px;padding:18px;margin:12px 0;box-shadow:0 5px 20px #0000000c}.hero{background:#1769e0;color:#fff}.hero h2{margin:7px 0;font-size:25px}.hero p{line-height:1.45;opacity:.9}
-label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}input{width:100%;padding:13px;border:1px solid #d6dce3;border-radius:11px;font-size:16px}.hero input{border:0}
-button.primary{width:100%;border:0;border-radius:11px;padding:13px;margin-top:12px;background:#1769e0;color:#fff;font-size:16px;font-weight:700}.hero button.primary{background:#fff;color:#1769e0}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:#f6f8fa;border-radius:13px;padding:13px}.stat b{display:block;font-size:19px;margin-top:4px}.green{color:#16834b}.red{color:#c53030}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.bill{display:flex;justify-content:space-between;gap:12px;align-items:center;border-top:1px solid #edf0f3;padding:13px 0}.bill:first-child{border-top:0}.bill small{display:block;color:#788596;margin-top:3px}.delete{border:0;background:#edf2f7;color:#334155;padding:7px 9px;border-radius:9px}.empty{text-align:center;color:#7a8795;padding:12px}.notice{font-weight:700;margin-top:12px}
-.install{background:#e8f1ff;color:#1554a6;padding:12px 14px;border-radius:13px;font-size:13px;margin:12px 0}.install b{display:block;margin-bottom:3px}
-</style></head><body><div class="app">
-<h1>💰 Conta em Dia</h1><div class="sub">Organize suas contas e descubra quanto guardar.</div>
-<div id="installHelp" class="install hidden"><b>📲 Instalar no iPhone</b>Toque em Compartilhar no Safari → <b>Adicionar à Tela de Início</b>.</div>
-<div class="tabs"><button class="tab active" onclick="aba('guardar',this)">💰 Guardar</button><button class="tab" onclick="aba('contas',this)">🧾 Contas</button><button class="tab" onclick="aba('resumo',this)">📊 Resumo</button></div>
+.app{max-width:600px;margin:auto;padding:16px 16px 40px}.top{margin-bottom:12px}h1{margin:0;font-size:28px}.sub{color:#6b7785;margin-top:4px}
+.tabs{display:flex;gap:5px;overflow:auto;background:#e5ebf2;padding:5px;border-radius:15px;position:sticky;top:5px;z-index:5}
+.tab{white-space:nowrap;border:0;border-radius:11px;background:transparent;color:#526071;font-weight:800;padding:11px 12px;font-size:12px}.tab.active{background:#fff;color:#1769e0;box-shadow:0 2px 8px #0002}
+section{margin-top:14px}.hidden{display:none!important}.card,.hero{background:#fff;border-radius:19px;padding:17px;margin:12px 0;box-shadow:0 5px 20px #0000000d}
+.hero{background:#1769e0;color:#fff}.hero h2{font-size:24px;margin:8px 0}.hero p{line-height:1.45}.badge{display:inline-block;padding:5px 9px;border-radius:20px;background:#ffffff2b;font-size:11px;font-weight:800}
+label{display:block;font-size:13px;font-weight:800;margin:12px 0 6px}input{width:100%;padding:13px;border:1px solid #d5dce4;border-radius:11px;font-size:16px;background:#fff}
+button.primary{width:100%;border:0;border-radius:11px;padding:13px;margin-top:12px;background:#1769e0;color:#fff;font-size:16px;font-weight:800}.hero button.primary{background:#fff;color:#1769e0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:#f6f8fa;border-radius:13px;padding:13px}.stat b{display:block;font-size:18px;margin-top:4px}
+.green{color:#16834b}.red{color:#c53030}.muted{color:#748294}.result{margin-top:14px;background:#f6f8fa;border-radius:15px;padding:15px}.result strong{font-size:20px}
+.choice{display:flex;gap:8px;margin-top:10px}.choice button{flex:1;padding:11px;border:0;border-radius:10px;font-weight:800}.buy{background:#e9eef4}.save{background:#1769e0;color:#fff}
+.item{padding:13px 0;border-top:1px solid #edf0f3}.item:first-child{border-top:0}.itemline{display:flex;justify-content:space-between;gap:10px;align-items:center}.item small{display:block;color:#788596;margin-top:4px}
+.btn{border:0;background:#edf2f7;padding:7px 9px;border-radius:9px;font-weight:700}.check{background:#e5f7ed;color:#16834b}.danger{background:#ffeaea;color:#c53030}
+.progress{height:10px;background:#e7ebef;border-radius:20px;overflow:hidden;margin-top:8px}.progress span{display:block;height:100%;background:#1769e0}
+.tip{border-left:4px solid #1769e0;background:#f5f8ff;padding:12px;border-radius:10px;margin-top:10px}
+</style>
+</head>
+<body><div class="app">
+<div class="top"><h1>💰 Conta em Dia</h1><div class="sub">Seu dinheiro, suas metas, suas decisões.</div></div>
 
-<section id="guardar"><div class="hero"><div>🎯 Sua prioridade</div><h2>Quanto você quer guardar?</h2><p>Informe sua renda e sua meta. O app calcula quanto separar por mês, semana e dia.</p>
-<label>Renda mensal</label><input id="renda" type="number" min="0" step="0.01" placeholder="Ex.: 2000">
-<label>Quanto quer guardar por mês?</label><input id="meta" type="number" min="0" step="0.01" placeholder="Ex.: 300">
-<button class="primary" onclick="salvar()">Salvar minha meta</button><div id="aviso" class="notice"></div></div>
-<div class="card"><h3>💵 Seu plano</h3><div class="stats"><div class="stat">Por mês<b id="mes">R$ 0,00</b></div><div class="stat">Por semana<b id="semana">R$ 0,00</b></div><div class="stat">Por dia<b id="dia">R$ 0,00</b></div><div class="stat">Livre após contas<b id="livre">R$ 0,00</b></div></div><p id="mensagem"></p></div></section>
-
-<section id="contas" class="hidden"><div class="card"><h3>➕ Adicionar conta</h3><label>Nome</label><input id="nome" placeholder="Ex.: Internet"><label>Valor</label><input id="valor" type="number" min="0" step="0.01" placeholder="Ex.: 100"><label>Vencimento</label><input id="venc" type="date"><button class="primary" onclick="addConta()">Adicionar conta</button></div><div class="card"><h3>📋 Minhas contas</h3><div id="lista" class="empty">Nenhuma conta cadastrada.</div></div></section>
-
-<section id="resumo" class="hidden"><div class="card"><h3>📊 Resumo financeiro</h3><div class="stats"><div class="stat">Renda<b id="sr">R$ 0,00</b></div><div class="stat">Contas<b id="sc">R$ 0,00</b></div><div class="stat">Meta<b id="sm">R$ 0,00</b></div><div class="stat">Disponível<b id="sd">R$ 0,00</b></div></div></div></section>
+<div class="tabs">
+<button class="tab active" onclick="aba('inicio',this)">💰 Guardar</button>
+<button class="tab" onclick="aba('gastar',this)">🧠 Antes de gastar</button>
+<button class="tab" onclick="aba('contas',this)">🧾 Contas</button>
+<button class="tab" onclick="aba('metas',this)">🎯 Metas</button>
+<button class="tab" onclick="aba('mais',this)">✨ Mais</button>
 </div>
+
+<section id="inicio">
+<div class="hero">
+<span class="badge">🎯 SUA PRIORIDADE</span>
+<h2>Quanto você quer guardar?</h2>
+<p>Monte seu plano e veja quanto sobra depois das contas.</p>
+<label>Renda mensal</label><input id="renda" type="number" placeholder="Ex.: 2000">
+<label>Quanto quer guardar por mês?</label><input id="metaMes" type="number" placeholder="Ex.: 300">
+<button class="primary" onclick="salvarPlano()">Salvar meu plano</button><div id="planoMsg" style="margin-top:10px;font-weight:800"></div>
+</div>
+<div class="card"><h3>💵 Seu plano</h3><div class="grid">
+<div class="stat">Por mês<b id="pm">R$ 0,00</b></div><div class="stat">Por semana<b id="ps">R$ 0,00</b></div>
+<div class="stat">Por dia<b id="pd">R$ 0,00</b></div><div class="stat">Livre<b id="pl">R$ 0,00</b></div>
+</div><div id="dica"></div></div>
+<div class="card"><h3>💡 Conselhos e dicas</h3><div id="conselhos"></div></div>
+</section>
+
+<section id="gastar" class="hidden">
+<div class="card"><span class="badge" style="background:#eaf1ff;color:#1769e0">🧠 ANTES DE GASTAR</span>
+<h2>Vale a pena comprar?</h2><p class="muted">Veja o impacto antes de decidir.</p>
+<label>Valor da compra</label><input id="compra" type="number" placeholder="Ex.: 150">
+<button class="primary" onclick="simular()">Simular compra</button><div id="resultado"></div></div>
+<div class="card"><h3>🕵️ Detector de compra por impulso</h3>
+<p class="muted">Responda rapidamente antes de uma compra não planejada.</p>
+<div class="item">1. Eu precisava disso antes de ver a oferta?</div>
+<div class="item">2. Posso esperar 24 horas?</div>
+<div class="item">3. Essa compra atrapalha alguma meta?</div>
+<button class="primary" onclick="impulso()">Fazer teste de impulso</button><div id="teste"></div>
+</div></section>
+
+<section id="contas" class="hidden">
+<div class="card"><h3>➕ Nova conta</h3>
+<label>Nome</label><input id="cnome" placeholder="Ex.: Internet">
+<label>Valor</label><input id="cvalor" type="number" placeholder="Ex.: 100">
+<label>Vencimento</label><input id="cdata" type="date">
+<label><input id="recorrente" type="checkbox" style="width:auto"> Conta mensal recorrente</label>
+<button class="primary" onclick="addConta()">Adicionar conta</button></div>
+<div class="card"><h3>📅 Contas e vencimentos</h3><div id="listaContas"></div></div>
+</section>
+
+<section id="metas" class="hidden">
+<div class="card"><h3>🎯 Criar uma meta</h3>
+<label>Nome da meta</label><input id="gnome" placeholder="Ex.: Carro">
+<label>Valor da meta</label><input id="gvalor" type="number" placeholder="Ex.: 10000">
+<label>Já tenho</label><input id="gatual" type="number" placeholder="Ex.: 500">
+<button class="primary" onclick="addMeta()">Criar meta</button></div>
+<div class="card"><h3>📈 Minhas metas</h3><div id="listaMetas"></div></div>
+</section>
+
+<section id="mais" class="hidden">
+<div class="card"><h3>🤖 Conselheiro financeiro</h3><p class="muted">Receba uma leitura simples da sua situação.</p>
+<button class="primary" onclick="conselheiro()">Analisar minhas finanças</button><div id="analise"></div></div>
+<div class="card"><h3>🔮 Como vou estar daqui a 30 dias?</h3>
+<button class="primary" onclick="previsao()">Ver previsão</button><div id="previsao"></div></div>
+<div class="card"><h3>🧩 E se eu fizer isso?</h3>
+<label>Valor que quero gastar</label><input id="cenario" type="number" placeholder="Ex.: 200">
+<button class="primary" onclick="testarCenario()">Testar cenário</button><div id="cenarioOut"></div></div>
+<div class="card"><h3>💰 Modo salário</h3>
+<p class="muted">Ao receber: contas → metas → dinheiro livre.</p>
+<button class="primary" onclick="modoSalario()">Montar divisão do salário</button><div id="salarioOut"></div></div>
+<div class="card"><h3>🏆 Conquistas</h3><div id="conquistas"></div></div>
+</section>
+</div>
+
 <script>
-let contas=JSON.parse(localStorage.getItem("contas")||"[]");
-const $=id=>document.getElementById(id);
-function R(n){return Number(n||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}
-function total(){return contas.reduce((a,b)=>a+b.valor,0)}
-function salvar(){
- const renda=+$("renda").value||0, meta=+$("meta").value||0, livre=renda-total()-meta;
- localStorage.setItem("renda",renda);localStorage.setItem("meta",meta);
- $("mes").textContent=R(meta);$("semana").textContent=R(meta/4);$("dia").textContent=R(meta/30);$("livre").textContent=R(livre);
- $("livre").className=livre>=0?"green":"red";
- $("mensagem").innerHTML=livre>=0?"✅ Você consegue guardar <b>"+R(meta)+"</b> por mês.":"⚠️ Sua meta está acima do valor que sobra depois das contas.";
- $("aviso").textContent=livre>=0?"Meta salva com sucesso! 🎯":"Diminua a meta ou reduza suas contas.";
- resumo();
-}
-function addConta(){
- const nome=$("nome").value.trim(), valor=+$("valor").value||0;
- if(!nome||valor<=0){alert("Digite o nome e o valor.");return}
- contas.push({nome,valor,venc:$("venc").value});localStorage.setItem("contas",JSON.stringify(contas));
- $("nome").value="";$("valor").value="";$("venc").value="";render();salvar();
-}
-function del(i){contas.splice(i,1);localStorage.setItem("contas",JSON.stringify(contas));render();salvar()}
-function render(){if(!contas.length){$("lista").className="empty";$("lista").textContent="Nenhuma conta cadastrada.";return}
- $("lista").className="";$("lista").innerHTML=contas.map((c,i)=>{let d=c.venc?c.venc.split("-").reverse().join("/"):"Sem vencimento";return `<div class="bill"><div><b>${c.nome}</b><small>Vence: ${d}</small></div><div><b>${R(c.valor)}</b> <button class="delete" onclick="del(${i})">Excluir</button></div></div>`}).join("")}
-function resumo(){const renda=+$("renda").value||0,meta=+$("meta").value||0,t=total();$("sr").textContent=R(renda);$("sc").textContent=R(t);$("sm").textContent=R(meta);$("sd").textContent=R(renda-t-meta)}
-function aba(id,b){["guardar","contas","resumo"].forEach(x=>$(x).classList.add("hidden"));$(id).classList.remove("hidden");document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");if(id==="contas")render();if(id==="resumo")resumo()}
-$("renda").value=localStorage.getItem("renda")||"";$("meta").value=localStorage.getItem("meta")||"";render();if($("renda").value)salvar();
-if(!("standalone" in navigator)||!navigator.standalone) $("installHelp").classList.remove("hidden");
-if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+let contas=JSON.parse(localStorage.getItem("ced3_contas")||"[]");
+let metas=JSON.parse(localStorage.getItem("ced3_metas")||"[]");
+let dados=JSON.parse(localStorage.getItem("ced3_dados")||"{}");
+const R=n=>Number(n||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const totalContas=()=>contas.filter(c=>!c.paga).reduce((s,c)=>s+c.valor,0);
+
+function save(){localStorage.setItem("ced3_contas",JSON.stringify(contas));localStorage.setItem("ced3_metas",JSON.stringify(metas));localStorage.setItem("ced3_dados",JSON.stringify(dados))}
+function aba(id,b){document.querySelectorAll("section").forEach(s=>s.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");renderTudo()}
+function salvarPlano(){let r=+document.getElementById("renda").value||0,m=+document.getElementById("metaMes").value||0;if(!r){document.getElementById("planoMsg").textContent="⚠️ Digite sua renda.";return}dados={renda:r,meta:m};save();calcular();document.getElementById("planoMsg").textContent="✅ Plano salvo!"}
+function calcular(){let r=dados.renda||0,m=dados.meta||0,l=r-totalContas()-m;document.getElementById("pm").textContent=R(m);document.getElementById("ps").textContent=R(m/4);document.getElementById("pd").textContent=R(m/30);let pl=document.getElementById("pl");pl.textContent=R(l);pl.className=l>=0?"green":"red";document.getElementById("dica").innerHTML=l>=0?"<div class=tip>💡 Você tem "+R(l)+" livres depois das contas e da meta.</div>":"<div class=tip>⚠️ Sua meta está maior que o valor disponível.</div>";conselhosPersonalizados()}
+function conselhosPersonalizados(){let r=dados.renda||0,t=totalContas(),m=dados.meta||0,a=[];if(!r)a.push("Comece colocando sua renda mensal para receber dicas melhores.");else{if(t>r*.6)a.push("Suas contas estão consumindo mais de 60% da renda. Revise despesas fixas.");if(m>0&&m<r*.1)a.push("Se couber no orçamento, aumente sua meta aos poucos.");if(m>=r*.2)a.push("Sua meta é ambiciosa. Mantenha uma margem para imprevistos.");if(!a.length)a.push("Seu planejamento está equilibrado. Continue simulando compras antes de gastar.")}document.getElementById("conselhos").innerHTML=a.map(x=>"<div class=tip>💡 "+x+"</div>").join("")}
+function simular(){let c=+document.getElementById("compra").value||0,r=dados.renda||0,m=dados.meta||0,l=r-totalContas()-m,after=l-c;document.getElementById("resultado").innerHTML="<div class=result><strong>"+(after>=0?"✅ Cabe no seu plano.":"⚠️ Vai apertar seu plano.")+"</strong><p>Depois da compra: <b>"+R(after)+"</b> livres.</p>"+(m?("<p>Impacto aproximado: <b>"+Math.ceil(c/(m/30))+" dias</b> da sua meta.</p>"):"")+"</div><div class=choice><button class=buy onclick='document.getElementById(\"resultado\").innerHTML+=\"<p>🛍️ Você decidiu comprar. Acompanhe sua meta.</p>\"'>🛍️ Comprar</button><button class=save onclick='document.getElementById(\"compra\").value=\"\";document.getElementById(\"resultado\").innerHTML=\"<div class=result><strong>💰 Dinheiro preservado!</strong></div>\"'>💰 Guardar</button></div>"}
+function impulso(){let p=prompt("Quantas das 3 perguntas indicam que você não precisava comprar? Digite 0, 1, 2 ou 3.");let n=+p||0;document.getElementById("teste").innerHTML=n>=2?"<div class=result>🟠 <b>Cuidado com a compra por impulso.</b><p>Espere 24 horas e simule novamente.</p></div>":"<div class=result>🟢 Parece uma compra mais consciente.</div>"}
+function addConta(){let n=document.getElementById("cnome").value.trim(),v=+document.getElementById("cvalor").value||0,d=document.getElementById("cdata").value;if(!n||!v){alert("Digite nome e valor.");return}contas.push({nome:n,valor:v,data:d,paga:false,recorrente:document.getElementById("recorrente").checked});save();document.getElementById("cnome").value="";document.getElementById("cvalor").value="";document.getElementById("cdata").value="";document.getElementById("recorrente").checked=false;renderTudo()}
+function pagar(i){contas[i].paga=!contas[i].paga;save();renderTudo()}
+function excluirConta(i){contas.splice(i,1);save();renderTudo()}
+function renderContas(){document.getElementById("listaContas").innerHTML=contas.length?contas.map((c,i)=>"<div class=item><div class=itemline><div><b>"+c.nome+"</b><small>"+R(c.valor)+" • "+(c.data?c.data.split("-").reverse().join("/"):"Sem data")+(c.recorrente?" • 🔄 mensal":"")+(c.paga?" • ✅ paga":"")+"</small></div><div><button class='btn check' onclick='pagar("+i+")'>"+(c.paga?"Desmarcar":"Paga")+"</button> <button class='btn danger' onclick='excluirConta("+i+")'>×</button></div></div></div>").join(""):"<p class=muted>Nenhuma conta cadastrada.</p>"}
+function addMeta(){let n=document.getElementById("gnome").value.trim(),v=+document.getElementById("gvalor").value||0,a=+document.getElementById("gatual").value||0;if(!n||!v){alert("Preencha a meta.");return}metas.push({n,v,a});save();document.getElementById("gnome").value="";document.getElementById("gvalor").value="";document.getElementById("gatual").value="";renderMetas()}
+function renderMetas(){document.getElementById("listaMetas").innerHTML=metas.length?metas.map(m=>{let p=Math.min(100,Math.round(m.a/m.v*100));return "<div class=item><div class=itemline><b>"+m.n+"</b><b>"+p+"%</b></div><div class=progress><span style='width:"+p+"%'></span></div><small>"+R(m.a)+" de "+R(m.v)+" • falta "+R(Math.max(0,m.v-m.a))+"</small></div>"}).join(""):"<p class=muted>Nenhuma meta criada.</p>"}
+function conselheiro(){let r=dados.renda||0,t=totalContas(),m=dados.meta||0;document.getElementById("analise").innerHTML="<div class=result>"+(!r?"💡 Comece informando sua renda na aba Guardar.":t>r*.6?"⚠️ Suas contas estão altas. Revise gastos fixos antes de assumir novas despesas.":m<r*.1?"💡 Você pode tentar aumentar sua meta aos poucos.":"✅ Seu plano parece equilibrado. Continue simulando compras antes de gastar.")+"</div>"}
+function previsao(){let r=dados.renda||0,m=dados.meta||0,l=r-totalContas()-m;document.getElementById("previsao").innerHTML="<div class=result>🔮 Se nada mudar nos próximos 30 dias, você pretende guardar <b>"+R(m)+"</b> e terá aproximadamente <b>"+R(Math.max(0,l))+"</b> livres depois do plano.</div>"}
+function testarCenario(){let c=+document.getElementById("cenario").value||0,r=dados.renda||0,m=dados.meta||0,l=r-totalContas()-m;document.getElementById("cenarioOut").innerHTML="<div class=result>🧩 Se gastar "+R(c)+", seu valor livre estimado passa de "+R(l)+" para <b>"+R(l-c)+"</b>.</div>"}
+function modoSalario(){let r=dados.renda||0,t=totalContas(),m=dados.meta||0;document.getElementById("salarioOut").innerHTML="<div class=result>💰 Salário: <b>"+R(r)+"</b><br>🧾 Contas: <b>"+R(t)+"</b><br>🎯 Meta: <b>"+R(m)+"</b><br>💵 Livre: <b>"+R(Math.max(0,r-t-m))+"</b></div>"}
+function renderConquistas(){let feitas=[];if(contas.some(c=>c.paga))feitas.push("🏆 Você já marcou uma conta como paga.");if(metas.some(m=>m.a>0))feitas.push("🎯 Você começou uma meta.");if((dados.meta||0)>0)feitas.push("💰 Você criou um plano de economia.");document.getElementById("conquistas").innerHTML=feitas.length?feitas.map(x=>"<div class=tip>"+x+"</div>").join(""):"<p class=muted>Suas primeiras conquistas aparecerão aqui.</p>"}
+function renderTudo(){renderContas();renderMetas();renderConquistas();if(dados.renda){document.getElementById("renda").value=dados.renda;document.getElementById("metaMes").value=dados.meta||0}calcular()}
+window.addEventListener("load",()=>{renderTudo();if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{})});
 </script></body></html>

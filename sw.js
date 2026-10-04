@@ -1,1 +1,3 @@
-const CACHE="conta-em-dia-v1";self.addEventListener("install",e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(["./","./index.html","./manifest.json","./icon-180.png","./icon-512.png"]))));self.addEventListener("fetch",e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(x=>{let y=x.clone();caches.open(CACHE).then(c=>c.put(e.request,y));return x}).catch(()=>caches.match("./index.html")))));
+const C="conta-em-dia-v3";const F=["./","./index.html","./manifest.json","./icon-180.png","./icon-512.png","./sw.js"];
+self.addEventListener("install",e=>e.waitUntil(caches.open(C).then(c=>c.addAll(F))));
+self.addEventListener("fetch",e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));
